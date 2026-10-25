@@ -1,1 +1,12 @@
+Create a complete, single-file HTML web application (index.html) designed for GitHub Pages that functions as an automated Long AI Video Generator and Stitcher. 
 
+Key Requirements:
+1. Clean, modern, and user-friendly interface optimized for Urdu speakers (with Arabic/Urdu compatible text alignment and styling using Tailwind CSS).
+2. A main text area where the user can paste/type a text prompt for a video clip.
+3. A "Generate & Append" button. When clicked, it generates a 10-second video clip based on the prompt.
+4. Auto Last Frame Continuity Engine: The system must automatically capture the final frame (snapshot) of the previously generated video clip and use it as the starting visual seed/reference for the next prompt. This ensures seamless continuity where the second video starts exactly where the first video ends, without manually changing characters or backgrounds.
+5. Auto-Stitching System: As the user adds multiple prompts one by one, the application must automatically concatenate/stitch each new 10-second clip sequentially into a single continuous master video player.
+6. A master download button to download the final stitched long video.
+7. Include a built-in Demo/Simulation mode using HTML5 Canvas and Media APIs so it works instantly on GitHub Pages without requiring expensive external paid API keys, while keeping an option to plug in external video generation APIs if needed.
+
+Provide only the clean, fully working index.html code with embedded CSS and JavaScript so the user can directly upload it to GitHub.
