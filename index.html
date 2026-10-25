@@ -1,12 +1,69 @@
-Create a complete, single-file HTML web application (index.html) designed for GitHub Pages that functions as an automated Long AI Video Generator and Stitcher. 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آటో لانگ اے آئی ویڈیو جنریٹر اور اسٹیچر</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Nastaliq Urdu', serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
 
-Key Requirements:
-1. Clean, modern, and user-friendly interface optimized for Urdu speakers (with Arabic/Urdu compatible text alignment and styling using Tailwind CSS).
-2. A main text area where the user can paste/type a text prompt for a video clip.
-3. A "Generate & Append" button. When clicked, it generates a 10-second video clip based on the prompt.
-4. Auto Last Frame Continuity Engine: The system must automatically capture the final frame (snapshot) of the previously generated video clip and use it as the starting visual seed/reference for the next prompt. This ensures seamless continuity where the second video starts exactly where the first video ends, without manually changing characters or backgrounds.
-5. Auto-Stitching System: As the user adds multiple prompts one by one, the application must automatically concatenate/stitch each new 10-second clip sequentially into a single continuous master video player.
-6. A master download button to download the final stitched long video.
-7. Include a built-in Demo/Simulation mode using HTML5 Canvas and Media APIs so it works instantly on GitHub Pages without requiring expensive external paid API keys, while keeping an option to plug in external video generation APIs if needed.
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">آٹو لانگ اے آئی ویڈیو اسٹیچر</h1>
+            <p class="text-slate-400 text-sm md:text-base">اپنے پرامپٹس درج کریں، آخری فریم خود بخود جڑے گا اور ایک لمبی ویڈیو تیار ہوگی۔</p>
+        </header>
 
-Provide only the clean, fully working index.html code with embedded CSS and JavaScript so the user can directly upload it to GitHub.
+        <!-- Main Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Left Panel: Prompt Input -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 text-emerald-300">نیا پرامپٹ درج کریں</h2>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm text-slate-400 mb-2">ویڈیو سین کی تفصیل (Prompt):</label>
+                        <textarea id="promptInput" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="مثلاً: ایک کار جنگل میں جا رہی ہے..."></textarea>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4 text-xs text-slate-400">
+                        <span class="text-emerald-400 font-bold">آٹو فریم فیچر:</span> اگلی ویڈیو کا آغاز خود بخود پچھلی ویڈیو کے آخری فریم سے جڑ جائے گا۔
+                    </div>
+                </div>
+
+                <button onclick="generateAndAppend()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg cursor-pointer">
+                    ویڈیو بنائیں اور جوڑیں (Generate & Append)
+                </button>
+            </div>
+
+            <!-- Right Panel: Preview & Timeline -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 text-emerald-300">ماسٹر ویڈیو پلیئر</h2>
+                    
+                    <!-- Video Player Preview -->
+                    <div class="bg-slate-950 aspect-video rounded-xl border border-slate-800 flex items-center justify-center mb-4 overflow-hidden relative">
+                        <video id="masterPlayer" controls class="w-full h-full object-cover hidden"></video>
+                        <div id="placeholderText" class="text-slate-500 text-sm text-center p-4">
+                            ابھی تک کوئی ویڈیو تیار نہیں ہوئی۔ پرامپٹ دے کر ویڈیو بنائیں!
+                        </div>
+                    </div>
+
+                    <!-- Scenes List -->
+                    <div class="mb-4">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">تیار شدہ سینز (Scenes):</h3>
+                        <div id="scenesList" class="space-y-2 max-h-32 overflow-y-auto text-xs text-slate-300">
+                            <p class="text-slate-600 italic">کوئی سین موجود نہیں</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="downloadBtn" onclick="downloadVideo
