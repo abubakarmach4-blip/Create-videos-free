@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آటో لانگ اے آئی ویڈیو جنریٹر اور اسٹیچر</title>
+    <title>لائیو میچ اسٹریمنگ فائنڈر</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -17,53 +17,85 @@
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">آٹو لانگ اے آئی ویڈیو اسٹیچر</h1>
-            <p class="text-slate-400 text-sm md:text-base">اپنے پرامپٹس درج کریں، آخری فریم خود بخود جڑے گا اور ایک لمبی ویڈیو تیار ہوگی۔</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">لائیو اسپورٹس میچ فائنڈر</h1>
+            <p class="text-slate-400 text-sm md:text-base">اپنے پسندیدہ میچ کا نام لکھیں (مثلاً: پاکستان بمقابلہ نیوزی لینڈ) اور لائیو لطف اٹھائیں۔</p>
         </header>
 
-        <!-- Main Container -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Left Panel: Prompt Input -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold mb-4 text-emerald-300">نیا پرامپٹ درج کریں</h2>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm text-slate-400 mb-2">ویڈیو سین کی تفصیل (Prompt):</label>
-                        <textarea id="promptInput" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="مثلاً: ایک کار جنگل میں جا رہی ہے..."></textarea>
-                    </div>
-
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4 text-xs text-slate-400">
-                        <span class="text-emerald-400 font-bold">آٹو فریم فیچر:</span> اگلی ویڈیو کا آغاز خود بخود پچھلی ویڈیو کے آخری فریم سے جڑ جائے گا۔
-                    </div>
-                </div>
-
-                <button onclick="generateAndAppend()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg cursor-pointer">
-                    ویڈیو بنائیں اور جوڑیں (Generate & Append)
+        <!-- Search Box Section -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl mb-6">
+            <div class="flex flex-col md:flex-row gap-3">
+                <input type="text" id="searchInput" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="یہاں میچ کا نام لکھیں (جیسے: Pakistan vs New Zealand Live)...">
+                <button onclick="searchLiveMatch()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 px-6 rounded-xl transition duration-200 shadow-lg cursor-pointer">
+                    لائیو میچ تلاش کریں
                 </button>
             </div>
+        </div>
 
-            <!-- Right Panel: Preview & Timeline -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold mb-4 text-emerald-300">ماسٹر ویڈیو پلیئر</h2>
-                    
-                    <!-- Video Player Preview -->
-                    <div class="bg-slate-950 aspect-video rounded-xl border border-slate-800 flex items-center justify-center mb-4 overflow-hidden relative">
-                        <video id="masterPlayer" controls class="w-full h-full object-cover hidden"></video>
-                        <div id="placeholderText" class="text-slate-500 text-sm text-center p-4">
-                            ابھی تک کوئی ویڈیو تیار نہیں ہوئی۔ پرامپٹ دے کر ویڈیو بنائیں!
-                        </div>
-                    </div>
-
-                    <!-- Scenes List -->
-                    <div class="mb-4">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">تیار شدہ سینز (Scenes):</h3>
-                        <div id="scenesList" class="space-y-2 max-h-32 overflow-y-auto text-xs text-slate-300">
-                            <p class="text-slate-600 italic">کوئی سین موجود نہیں</p>
-                        </div>
+        <!-- Live Player & Results Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Video Player Area -->
+            <div class="md:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
+                <h2 class="text-xl font-semibold mb-4 text-emerald-300">لائیو پلیئر</h2>
+                <div class="bg-slate-950 aspect-video rounded-xl border border-slate-800 flex items-center justify-center overflow-hidden relative">
+                    <div id="playerContainer" class="w-full h-full flex items-center justify-center text-slate-500 text-sm text-center p-4">
+                        اوپر دیے گئے باکس میں سرچ کر کے کسی بھی لائیو میچ پر کلک کریں!
                     </div>
                 </div>
+            </div>
 
-                <button id="downloadBtn" onclick="downloadVideo
+            <!-- Match Results / Channels List -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
+                <h3 class="text-lg font-semibold mb-4 text-emerald-300">دستیاب لائیو لنکس</h3>
+                <div id="resultsList" class="space-y-3 overflow-y-auto max-h-[300px] text-sm">
+                    <p class="text-slate-500 italic text-xs">ابھی کوئی نتیجہ موجود نہیں۔</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function searchLiveMatch() {
+            const query = document.getElementById('searchInput').value.trim();
+            const resultsList = document.getElementById('resultsList');
+            const playerContainer = document.getElementById('playerContainer');
+
+            if(!query) {
+                alert('براہ کرم میچ کا نام درج کریں!');
+                return;
+            }
+
+            resultsList.innerHTML = '<p class="text-emerald-400 text-xs animate-pulse">مطلوبہ لائیو لنکس تلاش کیے جا رہے ہیں...</p>';
+
+            // Simulating live match searching based on user query
+            setTimeout(() => {
+                resultsList.innerHTML = '';
+
+                // Mock dynamic links generated according to user search
+                const mockMatches = [
+                    { title: `${query} - اسپورٹس ایچ ڈی لائیو لنک 1`, type: 'youtube', url: 'https://www.youtube.com/embed/live_stream?channel=UC123456' },
+                    { title: `${query} - پی ٹی وی اسپورٹس / جیو سوپر لائیو`, type: 'iframe', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+                    { title: `${query} - براہ راست اسٹریمنگ لنک 3`, type: 'iframe', url: 'https://www.youtube.com/embed/3JZ_D3ELwOQ' }
+                ];
+
+                mockMatches.forEach((match, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-emerald-500 cursor-pointer transition duration-200';
+                    item.innerHTML = `<div class="font-bold text-slate-200 text-xs mb-1">${match.title}</div><div class="text-[10px] text-emerald-400">کلک کر کے پلے کریں ▸</div>`;
+                    
+                    item.onclick = () => {
+                        playerContainer.innerHTML = `<iframe src="${match.url}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+                    };
+
+                    resultsList.appendChild(item);
+                });
+
+                // Auto select first link for user convenience
+                playerContainer.innerHTML = `<iframe src="${mockMatches[0].url}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
