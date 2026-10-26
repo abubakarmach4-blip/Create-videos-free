@@ -1,144 +1,31 @@
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالمی لائیو ٹی وی فائنڈر</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- HLS.js for Live Stream Playback -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Noto Nastaliq Urdu', serif; }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+Build a complete, professional, single-file HTML/CSS/JavaScript web application for an automotive and lubricant spare parts business named "انصاف آٹوز" (Insaaf Autos). 
 
-    <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">لائیو ٹی وی اور اسپورٹس سرچ انجن</h1>
-            <p class="text-slate-400 text-sm md:text-base">کسی بھی لائیو ٹی وی چینل کا نام لکھیں اور مفت لائیو نشریات دیکھیں!</p>
-        </header>
+Here are the precise requirements and layout specifications:
 
-        <!-- Search Box Section -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl mb-6">
-            <div class="flex flex-col md:flex-row gap-3">
-                <input type="text" id="channelSearch" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-emerald-500 text-sm" placeholder="چینل کا نام لکھیں (جیسے: PTV Sports, Geo News, Ten Sports, Cricket)...">
-                <button onclick="searchChannels()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-3 px-6 rounded-xl transition duration-200 shadow-lg cursor-pointer">
-                    چینل تلاش کریں
-                </button>
-            </div>
-        </div>
+1. SHOP & HEADER DETAILS:
+- Top Header: Display business name in bold Urdu typography: "انصاف آٹوز".
+- Below the header, left side: Address in Urdu -> "نیو ٹرک اڈہ، مچھ بولان".
+- Right opposite to the address: Proprietor details -> "پروپرائیٹر: ابو بکر | 0335-3832032".
+- Info Row: Include clean input/text fields for "نام:", "بل نمبر:", and "تاریخ:" (Do not use the word "کسٹمر").
 
-        <!-- Live Player & Results Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Video Player Area -->
-            <div class="md:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-                <h2 id="currentPlayingTitle" class="text-lg font-semibold mb-4 text-emerald-300">لائیو اسکرین</h2>
-                <div class="bg-slate-950 aspect-video rounded-xl border border-slate-800 flex items-center justify-center overflow-hidden relative">
-                    <video id="videoPlayer" controls autoplay class="w-full h-full object-contain hidden"></video>
-                    <div id="playerPlaceholder" class="text-slate-500 text-sm text-center p-4">
-                        سائیڈ لسٹ میں سے کسی بھی چینل پر کلک کر کے لائیو اسٹریمنگ شروع کریں۔
-                    </div>
-                </div>
-            </div>
+2. CAMERA & VISUAL AI SCANNER / PRODUCT MANAGEMENT:
+- Add a product management section where the user can click a picture of a product using the device camera, save its name, category, and price (e.g., Total Rubia 4L, Delo 4L, Shell Rimula 4L).
+- Provide a direct visual/camera scanner mode that captures camera frames, matches product visual signatures/colors, plays an audio beep, and automatically adds the item to the active bill/cart without requiring physical barcodes.
 
-            <!-- Channels & Links List -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-                <h3 class="text-lg font-semibold mb-4 text-emerald-300">ملنے والے چینلز اور لنکس</h3>
-                <div id="channelsList" class="space-y-3 overflow-y-auto max-h-[380px] text-sm pr-1">
-                    <p class="text-slate-500 italic text-xs">سرچ باکس میں چینل سرچ کریں۔</p>
-                </div>
-            </div>
+3. BILLING & CART SYSTEM:
+- Dynamic table columns matching traditional cash memos: "تعداد" (Qty), "تفصیل" (Description), "نرخ" (Rate), "پیسے" (Paise), "روپے" (Rupees).
+- Automatic calculation of subtotal, discounts, and "میزان" (Grand Total).
+- Support for pre-loaded motor oil items with sample pricing:
+  * ڈيلو 4 لیٹر (Delo 4L) - Rs. 4,400
+  * ٹوٹل روبیا 4 لیٹر (Total Rubia 4L) - Rs. 4,400
+  * شیل رمولا 4 لیٹر (Shell Rimula 4L) - Rs. 5,000
 
-        </div>
-    </div>
+4. EXPORT & SHARING FEATURES:
+- Direct Print button using window.print() formatted cleanly for thermal printers and A4 paper matching the exact header and table structure.
+- Direct WhatsApp Share button that generates a clean text-formatted receipt with shop details, itemized list, and grand total to send directly to customers.
+- Clean footer with absolutely NO extra text, poetry, or clutter at the bottom.
 
-    <script>
-        let allChannels = [];
-        let hlsPlayer = null;
-
-        // Fetch free public live TV channels database on load
-        async function loadDatabase() {
-            try {
-                const response = await fetch('https://iptv-org.github.io/iptv/channels.json');
-                allChannels = await response.json();
-            } catch (err) {
-                console.log('Database load error:', err);
-            }
-        }
-
-        window.onload = loadDatabase;
-
-        async function searchChannels() {
-            const query = document.getElementById('channelSearch').value.trim().toLowerCase();
-            const listContainer = document.getElementById('channelsList');
-
-            if (!query) {
-                alert('براہ کرم کسی چینل کا نام لکھیں!');
-                return;
-            }
-
-            listContainer.innerHTML = '<p class="text-emerald-400 text-xs animate-pulse">چینلز تلاش کیے جا رہے ہیں...</p>';
-
-            // Filter channels matching search query
-            const matched = allChannels.filter(c => c.name && c.name.toLowerCase().includes(query));
-
-            if (matched.length === 0) {
-                // If not found in primary database, search dynamic stream links
-                listContainer.innerHTML = `
-                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                        <p class="text-slate-300 text-xs mb-2">ڈیٹا بیس میں مستقیم نام نہیں ملا۔ براہ راست براؤزر سرچ لنک تلاش کریں:</p>
-                        <a href="https://www.google.com/search?q=${encodeURIComponent(query + ' live stream free')}" target="_blank" class="text-emerald-400 underline text-xs">گوگل پر لائیو اسٹریمنگ تلاش کریں ↗</a>
-                    </div>
-                `;
-                return;
-            }
-
-            listContainer.innerHTML = '';
-
-            matched.slice(0, 15).forEach((channel) => {
-                const card = document.createElement('div');
-                card.className = 'bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-emerald-500 cursor-pointer transition duration-200 flex justify-between items-center';
-                card.innerHTML = `
-                    <div>
-                        <div class="font-bold text-slate-200 text-xs">${channel.name}</div>
-                        <div class="text-[10px] text-slate-400">${channel.country || 'Global'} | ${channel.category || 'Live TV'}</div>
-                    </div>
-                    <span class="text-xs text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded border border-emerald-800">لائیو پلے ▸</span>
-                `;
-
-                card.onclick = () => playStream(channel.url, channel.name);
-                listContainer.appendChild(card);
-            });
-        }
-
-        function playStream(streamUrl, channelName) {
-            const video = document.getElementById('videoPlayer');
-            const placeholder = document.getElementById('playerPlaceholder');
-            const title = document.getElementById('currentPlayingTitle');
-
-            title.innerText = `لائیو: ${channelName}`;
-            placeholder.classList.add('hidden');
-            video.classList.remove('hidden');
-
-            if (Hls.isSupported()) {
-                if (hlsPlayer) { hlsPlayer.destroy(); }
-                hlsPlayer = new Hls();
-                hlsPlayer.loadSource(streamUrl);
-                hlsPlayer.attachMedia(video);
-                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = streamUrl;
-                video.play();
-            } else {
-                alert('آپ کا براؤزر یہ لائیو اسٹریمنگ فارمیٹ سپورٹ نہیں کرتا۔');
-            }
-        }
-    </script>
-</body>
-</html>
+5. DESIGN & STORAGE:
+- Use a sleek, luxury dark and gold theme (Charcoal & Gold accents) suitable for an automotive lubricant shop.
+- Use LocalStorage so all products, inventory, and generated bills persist across sessions.
+- Provide the entire application in a single, well-structured, production-ready index.html file with embedded CSS and JavaScript.
